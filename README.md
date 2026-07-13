@@ -1,24 +1,13 @@
-<div align="center">
-
 <a href="https://flutterpro.design">
-  <img src="assets/logo-horizontal.svg" alt="Flutter Pro Design" width="420" />
+  <img src="assets/logo-horizontal.svg" alt="Flutter Pro Design" width="380" />
 </a>
 
-<br />
-<br />
+Agent skills built from [flutterpro.design](https://flutterpro.design): small details that make Flutter apps feel right, turned into rules your coding agent can check for you. Dead tap zones, layout shifts, "null" on screen, missing haptics, and more.
 
-**Everyone can code. Not everyone has taste.**
+## Install
 
-AI skills built from [flutterpro.design](https://flutterpro.design): small details that make Flutter apps feel right, turned into rules your coding agent can check for you.
+Coming soon.
 
-<br />
-
-### Coming soon
-
-Tell your agent to review your Flutter code. It finds the details you missed: dead tap zones, layout shifts, "null" on screen, missing haptics, and more.
-
-<br />
+## Links
 
 [flutterpro.design](https://flutterpro.design) · [@kamranbekirovyz](https://x.com/kamranbekirovyz)
-
-</div>
