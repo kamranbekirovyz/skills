@@ -1,6 +1,11 @@
 <div align="center">
 
-# flutterpro.design skills
+<a href="https://flutterpro.design">
+  <img src="assets/logo-horizontal.svg" alt="Flutter Pro Design" width="420" />
+</a>
+
+<br />
+<br />
 
 **Everyone can code. Not everyone has taste.**
 
