@@ -1,6 +1,6 @@
-# FlutterPro Design — Detail Catalog
+# FlutterPro Design Detail Catalog
 
-The rules behind `flutter-pro-design-review`. Each rule is one detail from [FlutterPro.Design](https://flutterpro.design). Findings cite rules by their heading slug. The Fix code here is canonical: copy it into plans and adapt names to the codebase, never invent a different solution.
+The rules behind `flutter-pro-design-review`. Findings cite rules by their heading slug. The Fix code here is canonical: copy it into plans and adapt to the codebase, never invent a different solution.
 
 Each rule reads: **Detect** (what to look for in the code), **Why** (what users feel), **Fix** (the exact pattern).
 
@@ -8,100 +8,41 @@ Each rule reads: **Detect** (what to look for in the code), **Why** (what users 
 
 ## safe-area-replacement
 
-Typical impact: Noticeable · Effort: S · [article](https://flutterpro.design/details/safe-area-replacement)
+Typical impact: Noticeable · Effort: S
+Fix in one phrase: don't clip content at the bottom, let it scroll past the edge, and give the last item breathing room with dynamic bottom padding.
 
-**Detect:** a scrollable (`ListView`, `SingleChildScrollView`, `CustomScrollView`) wrapped in `SafeArea`, or a scrollable whose padding has no bottom inset handling (`viewPadding` / `SafeArea` / `MediaQuery` nowhere in sight). Both fail: `SafeArea` clips scrolled content at the bottom edge, no handling makes the last item stick under the system bar.
+**Detect:** every vertical scrollable that reaches the bottom of the screen or of a bottom sheet must end with dynamic bottom padding (a `BottomPadding`-style helper reading `MediaQuery.viewPaddingOf(context).bottom`), whether `SafeArea` is present or not. Hunt: grep `ListView|SingleChildScrollView|CustomScrollView|GridView|NestedScrollView`, then for each check the three places the padding could live: the `padding:` parameter, the last child, a wrapping `Padding`. Flag when it's hardcoded (`bottom: 32`), missing, or left to `SafeArea`; `SafeArea` around a scrollable is additionally wrong (it clips scrolled content). Content not reaching the bottom today doesn't matter; one more item and it will. Only the outermost scrollable needs it, not lists nested inside. List every offending scrollable separately, `file:line` each.
 
-**Why:** scroll to the end and the last item is either cut off mid-render or pinned under the home indicator with zero breathing room. The screen feels unfinished.
+**Why:** scroll to the end and the last item is either cut off or crammed against the very edge of the phone. Everything works, but the screen feels unfinished, like nobody ever scrolled it on a real device.
 
-**Fix:** remove `SafeArea` around the scrollable and add dynamic bottom padding instead:
-
-```dart
-class BottomPadding extends StatelessWidget {
-  const BottomPadding({super.key});
-
-  static double of(BuildContext context, {double minimum = 16}) {
-    final double viewPadding = MediaQuery.viewPaddingOf(context).bottom;
-    return viewPadding > minimum ? viewPadding : minimum;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(height: of(context));
-  }
-}
-```
-
-Use it as the last child of the scrolled `Column`, or as padding:
-
-```dart
-ListView(
-  padding: EdgeInsets.only(bottom: BottomPadding.of(context)),
-)
-```
-
-`SafeArea` shrinks the viewport. `BottomPadding` adds breathing room.
+**Gotchas:** the padding must keep a minimum on devices with no bottom system bar, so it never collapses to zero. If the app already has its own bottom-padding helper, flag the screens that skip it; don't introduce a second helper.
 
 ---
 
 ## shader-mask
 
-Typical impact: Subtle · Effort: S · [article](https://flutterpro.design/details/shader-mask)
+Typical impact: Noticeable for horizontal rows and small lists, Subtle for full-screen lists · Effort: S
+Fix in one phrase: fade the edge so it's clear there's more to scroll.
 
-**Detect:** a scrollable list that fills its viewport with no scroll affordance: no edge fade, no visible scrollbar, content hard-clipped at the boundary. Common spots: pickers, horizontal chip rows, tall menus.
+**Detect:** in priority order:
 
-**Why:** long lists aren't obviously scrollable. Items just sit there and users don't know there's more.
+1. **Horizontal scrollables: always flag when there's no edge fade.** No exceptions for a peeking half-item: what peeks on one screen width ends exactly at the edge on another, so the hint can't be trusted.
+2. **Small bounded scrollables** (pickers, dropdown-style menus, lists inside sheets): a few visible items with the boundary sitting mid-screen looks like a designed end, not a window onto more. Flag when there's no fade.
+3. **Full-screen vertical lists:** users expect screens to scroll, so flag missing bottom fade at Subtle, not higher.
 
-**Fix:** fade the edge with `ShaderMask`, no package needed. Bottom-only usually works best (once they've scrolled, they know there's a top):
+Hunt: grep `Axis.horizontal` for rows; grep `ListView|GridView|ListWheelScrollView|CupertinoPicker` inside sheets, dialogs, and fixed-height boxes for the small ones. A candidate is clear only if a fade (`ShaderMask`) or an always-visible `Scrollbar` is already there.
 
-```dart
-ShaderMask(
-  shaderCallback: (Rect bounds) {
-    return const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Colors.white, Colors.white, Colors.white, Colors.transparent],
-      stops: [0.0, 0.0, 0.88, 1.0],
-    ).createShader(bounds);
-  },
-  blendMode: BlendMode.dstIn,
-  child: /* the scrollable */,
-)
-```
+**Why:** a hard-cut edge looks like the end. Users don't scroll toward what they can't tell exists, and whatever lives past the edge goes unseen.
 
-For horizontal lists use `centerLeft` → `centerRight`. Adjust `stops` for fade size: `0.9` subtle, `0.7` aggressive. The mask is alpha-only, so it works the same in light and dark mode.
+**Gotchas:** fade the trailing edge (bottom for vertical, end for horizontal); once users have scrolled, they know where they came from. An always-visible scrollbar already does the job, don't flag those. The fade is alpha-only, so it works unchanged in light and dark mode.
 
 ---
 
 ## in-app-changelog
 
-Typical impact: Subtle · Effort: L · [article](https://flutterpro.design/details/in-app-changelog)
+Typical impact: Subtle · Effort: L
+Fix in one phrase: show users what changed after an update, so shipped work gets seen.
 
-**Detect:** the app ships updates (version in `pubspec.yaml` above 1.0.x, or a store presence) but has no changelog surface: no "what's new" screen, no last-seen-version tracking (`grep` for `changelog`, `last_seen_version`, `whats_new` returns nothing). Flag as an opportunity, not a defect.
+**Detect:** the app has no changelog surface. Hunt: grep `changelog`, `whats_new`, `last_seen_version`; nothing found means there's none. Flag as an opportunity, not a defect.
 
-**Why:** without a changelog, shipped features and fixed bugs stay in the shadow. And when changes came from user feedback, users get to see they were heard.
-
-**Fix:** a versioned map plus last-seen tracking. Needs `pub_semver`, `package_info_plus`, `shared_preferences` (declare in the plan header):
-
-```dart
-const Map<String, List<String>> _changelog = {
-  '1.3.0': ['export transactions to csv.'],
-  '1.2.0': ['reorder categories with drag.', 'unlimited accounts.'],
-};
-
-List<String> unseenChanges({required String lastSeen, required String current}) {
-  final Version lastSeenVersion = Version.parse(lastSeen);
-  final Version currentVersion = Version.parse(current);
-
-  final List<String> result = [];
-  for (final entry in _changelog.entries) {
-    final Version entryVersion = Version.parse(entry.key);
-    if (entryVersion > lastSeenVersion && entryVersion <= currentVersion) {
-      result.addAll(entry.value);
-    }
-  }
-  return result;
-}
-```
-
-On app open: read the current version, compare with the persisted last-seen version, and show unseen changes in a modal. Persist the current version on dismiss. Don't show on first install: there's nothing to catch up on, save and skip. If the user jumps from `1.2.0` to `1.5.0`, show everything in between. Full state-management example in the article.
+**Why:** features ship, bugs get fixed, and users never hear about it. A changelog makes updates visible, and when a change came from feedback, the user who asked sees they were heard.
