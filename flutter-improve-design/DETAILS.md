@@ -1,12 +1,12 @@
 # FlutterPro Design Detail Catalog
 
-The rules behind `flutter-pro-design-review`. Each rule: a title, the `slug` on the line below (the machine handle: findings cite it, and the full article lives at `https://flutterpro.design/details/<slug>`), a fix in one phrase, then **Detect** (what to flag), **Hunt** (how to search for it), **Why** (what users feel), and **Gotchas** (edge cases). The catalog detects; the article fixes.
+The rules behind `flutter-improve-design`. Each rule: a title, the link to its full article on the line below (fetched only at plan time), a fix in one phrase, then **Detect** (what to flag), **Hunt** (how to search for it), **Why** (what users feel), and **Gotchas** (edge cases). The catalog detects; the article fixes.
 
 ---
 
 ## Give the last item room to breathe
 
-`safe-area-replacement` · Noticeable · Effort: S
+https://flutterpro.design/details/md/safe-area-replacement · Noticeable · Effort: S
 Fix in one phrase: don't clip content at the bottom, let it scroll past the edge, and give the last item breathing room with dynamic bottom padding.
 
 **Detect:** every vertical scrollable that reaches the bottom of the screen or of a bottom sheet must end with dynamic bottom padding (a `BottomPadding`-style helper reading `MediaQuery.viewPaddingOf(context).bottom`), whether `SafeArea` is present or not. Flag when it's hardcoded (`bottom: 32`), missing, or left to `SafeArea`; `SafeArea` around a scrollable is additionally wrong (it clips scrolled content). Content not reaching the bottom today doesn't matter; one more item and it will. Only the outermost scrollable needs it, not lists nested inside. List every offending scrollable separately, `file:line` each.
@@ -21,7 +21,7 @@ Fix in one phrase: don't clip content at the bottom, let it scroll past the edge
 
 ## Make it obvious there's more to scroll
 
-`shader-mask` · Noticeable for horizontal rows and small lists, Subtle for full-screen lists · Effort: S
+https://flutterpro.design/details/md/shader-mask · Noticeable for horizontal rows and small lists, Subtle for full-screen lists · Effort: S
 Fix in one phrase: fade the edge so it's clear there's more to scroll.
 
 **Detect:** in priority order:
@@ -40,7 +40,7 @@ Fix in one phrase: fade the edge so it's clear there's more to scroll.
 
 ## Show users what you shipped
 
-`in-app-changelog` · Subtle · Effort: L
+https://flutterpro.design/details/md/in-app-changelog · Subtle · Effort: L
 Fix in one phrase: show users what changed after an update, so shipped work gets seen.
 
 **Detect:** the app has no changelog surface. Flag as an opportunity, not a defect.
