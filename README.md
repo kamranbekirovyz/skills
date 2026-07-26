@@ -1,8 +1,8 @@
 <a href="https://flutterpro.design">
-  <img src="https://flutterpro.design/logo-horizontal.svg" alt="Flutter Pro Design" width="380" />
+  <img src="https://raw.githubusercontent.com/kamranbekirovyz/skills/main/COVER.png" alt="AI skills for building beautiful Flutter apps" />
 </a>
 
-Agent skills built from [flutterpro.design](https://flutterpro.design): small details that make Flutter apps feel right, turned into rules your coding agent can check for you. Dead tap zones, layout shifts, "null" on screen, missing haptics, and more.
+Agent skills built from [FlutterPro.Design](https://flutterpro.design): small details that make Flutter apps feel right, turned into rules your coding agent can check for you.
 
 ## Install
 
