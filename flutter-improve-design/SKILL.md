@@ -24,15 +24,9 @@ The detail catalog lives at:
 https://raw.githubusercontent.com/kamranbekirovyz/skills/main/flutter-improve-design/DETAILS.md
 ```
 
-Each rule carries the link to its full article on the line below the title. Never open those links during the review. They are fetched in step 7, only for the rules the developer picked, and never for the rest.
+Each rule carries a **Link** line with its full article. Never open those links during the review. They are fetched in step 7, only for the rules the developer picked, and never for the rest.
 
 Fetch the catalog at the start of every review, raw and verbatim: `curl -s <url>` (or save to a temp file and read it). Do NOT use fetch tools that summarize pages through a model; the catalog's detection patterns must arrive untouched. It is updated frequently; never rely on a cached or remembered version, and never invent rules that are not in it. If the fetch fails, stop and tell the user: "I couldn't fetch the latest catalog. Please download it from the URL above and paste it here." Do not review without the catalog.
-
-## Impact
-
-Every rule in the catalog carries one of three tiers: Loud, Noticeable, or Subtle. Use the rule's tier as written; never re-rate it.
-
-Order the findings Loud → Noticeable → Subtle, and keep catalog order within a tier.
 
 ## Workflow
 
@@ -56,10 +50,10 @@ Then vet, silently: open the code you matched and confirm it with your own eyes 
 
 ### 4. Present the findings
 
-Print every finding, no cap, as a numbered block. No tables.
+Print every finding, no cap, as a numbered block in catalog order. No tables.
 
 ```
-1. **Images pop in as they load** — Loud
+1. **Images pop in as they load**
 
    The screen shows up first and the pictures snap in one by one a moment
    later, pushing the layout around as they land. It makes the app look like
@@ -69,7 +63,6 @@ Print every finding, no cap, as a numbered block. No tables.
 One block per rule that matched, separated by a blank line.
 
 - **The title** is the symptom users feel ("taps on the row's padding do nothing"), not the technique. Sentence case, one line.
-- **The tier** is the rule's, unchanged.
 - **The body** is the rule's **Why**, in full. That paragraph is written to be shown to the developer, so print its words; don't summarize it, don't reword it into something more technical, and never say the same thing twice in one block.
 
 No locations, no counts, no file paths anywhere. The developer is deciding whether the app should have this fixed at all; where it gets fixed is settled later, when the plan sweeps the app.
@@ -82,13 +75,13 @@ Ask: "Which findings should I turn into plans? (e.g. 1, 4, 5, or all)". **Wait f
 
 ### 6. Save the chosen findings
 
-Write the chosen findings to `docs/improvements/design/findings.md`, overwriting the previous one. Copy each block exactly as you printed it in step 4, and add the rule's article link under the title. The link goes in the file only, never in what you print.
+Write the chosen findings to `docs/improvements/design/findings.md`, overwriting the previous one. Copy each block exactly as you printed it in step 4, and add the rule's **Link**. The link goes in the file only, never in what you print.
 
 ### 7. Write the plans
 
 Now, and only now, find every place the rule applies. The review stopped at the first hit; the plan must be complete, so re-run the rule's Hunt across the whole app and check each result against its Detect. One plan covers every location it found, each quoted with `file:line`. If a rule turns out to apply in twenty places, the plan says twenty; that number is a fact about the fix, and the developer already approved the fix.
 
-For each chosen finding, fetch the rule's full article, raw and verbatim: `curl -s <the article link on the rule's line>`. Same rule as the catalog: no summarizing fetch tools. The plan's fix is the article's fix, applied to this codebase; never invent a different solution. The executor never fetches anything, so the plan must carry everything.
+For each chosen finding, fetch the rule's full article, raw and verbatim: `curl -s <the URL on the rule's **Link** line>`. Same rule as the catalog: no summarizing fetch tools. The plan's fix is the article's fix, applied to this codebase; never invent a different solution. The executor never fetches anything, so the plan must carry everything.
 
 Read [PLAN-TEMPLATE.md](PLAN-TEMPLATE.md) and write one plan per finding to `docs/improvements/design/plans/`, each named after the last segment of its rule's article URL (`smooth-image-loading.md`). Delete any plan already in the folder that this run did not write; the folder holds this review's plans and nothing else. Excerpts in plans come from your own reads of the code, never from memory.
 

@@ -1,12 +1,12 @@
 # FlutterPro Design Detail Catalog
 
-The rules behind `flutter-improve-design`. Each rule: a title, then the link to its full article and its impact tier on the line below (the article is fetched only at plan time), **Why** (what the user lives with today and what the app gains by fixing it, in plain words, written to be shown to the developer as-is), then **Detect** (what to flag) and **Hunt** (how to search for it). 
+The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** line with its full article (the article is fetched only at plan time), **Why** (what the user lives with today and what the app gains by fixing it, in plain words, written to be shown to the developer as-is), then **Detect** (what to flag) and **Hunt** (how to search for it). 
 
 ---
 
 ## Show what's new after an update
 
-https://flutterpro.design/details/md/in-app-changelog · Subtle
+**Link:** https://flutterpro.design/details/md/in-app-changelog
 
 **Why:** after an update, users open the app and nothing tells them what's new. The bug you fixed and the feature they asked for go unnoticed. A short list on first open shows them, and the user who asked for that feature knows you listened.
 
@@ -18,7 +18,7 @@ https://flutterpro.design/details/md/in-app-changelog · Subtle
 
 ## Don't let the system navigation bar cover the bottom of a scrollable list
 
-https://flutterpro.design/details/md/safe-area-replacement · Noticeable
+**Link:** https://flutterpro.design/details/md/safe-area-replacement
 
 **Why:** the last item of scrollable lists can be obscured by the system navigation bar, and taps go to the bar instead of the item. Leave space as tall as that bar at the end of the list and the last item stays fully visible and tappable.
 
@@ -30,7 +30,7 @@ https://flutterpro.design/details/md/safe-area-replacement · Noticeable
 
 ## Make horizontal lists feel scrollable
 
-https://flutterpro.design/details/md/shader-mask · Noticeable
+**Link:** https://flutterpro.design/details/md/shader-mask
 
 **Why:** a horizontal row that ends in a hard edge looks like it has ended. Users don't swipe toward something they can't tell is there, so the rest of the row goes unseen. Fading the edge shows there's more, and the items you put there get looked at.
 
@@ -42,7 +42,7 @@ https://flutterpro.design/details/md/shader-mask · Noticeable
 
 ## Match text selection to your app's colors
 
-https://flutterpro.design/details/md/selection-color · Subtle
+**Link:** https://flutterpro.design/details/md/selection-color
 
 **Why:** when a user selects text, in a text field or anywhere on the screen, the highlight is Material's tint color, not the app's.
 
@@ -54,7 +54,7 @@ https://flutterpro.design/details/md/selection-color · Subtle
 
 ## Load network images smoothly
 
-https://flutterpro.design/details/md/smooth-image-loading · Noticeable
+**Link:** https://flutterpro.design/details/md/smooth-image-loading
 
 **Why:** the screen shows up first and the pictures snap in one by one a moment later, pushing the layout around as they land. It makes the app look like it's still putting itself together while the user watches. Show a plain grey box until each picture is ready and fade it in, and the same screen feels calm.
 
@@ -68,7 +68,7 @@ https://flutterpro.design/details/md/smooth-image-loading · Noticeable
 
 ## Preload icons so they don't pop in
 
-https://flutterpro.design/details/md/precache-icons · Subtle
+**Link:** https://flutterpro.design/details/md/precache-icons
 
 **Why:** open the app and everything is there except the icons, which show up a moment later. Nobody thinks about why; they just feel the app is slow to wake up. Load the first screen's icons while the splash is still showing and it opens ready.
 
@@ -80,7 +80,7 @@ https://flutterpro.design/details/md/precache-icons · Subtle
 
 ## Show users your swipe actions exist
 
-https://flutterpro.design/details/md/flutter-slidable-controller · Noticeable
+**Link:** https://flutterpro.design/details/md/flutter-slidable-controller
 
 **Why:** delete and edit sit behind a swipe, with nothing on screen pointing at them. Users who don't think to swipe never find out those actions exist, so work you already shipped goes unused. Sliding the first row open by itself, once, the first time someone opens the list, teaches the gesture without a tutorial.
 
