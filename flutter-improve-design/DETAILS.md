@@ -20,7 +20,7 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Link:** https://flutterpro.design/details/md/safe-area-replacement
 
-**Why:** the last item of scrollable lists can be obscured by the system navigation bar, and taps go to the bar instead of the item. Leave space as tall as that bar at the end of the list so the last item has a breathing room against system bar.
+**Why:** the last item of scrollable lists gets obscured by the system navigation bar. Leave space as tall as that bar at the end of the list so the last item has a breathing room against the bar.
 
 **Detect:** a vertical scrollable that runs to the bottom of the screen and doesn't end with space as tall as the system navigation bar. `SafeArea` around it doesn't fix it: it shrinks the scrolling area, so items get cut off as they pass the bottom instead of sliding under the bar. A fixed padding like 24 on every side isn't a fix either: the bar's height changes by device.
 
@@ -32,7 +32,7 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Link:** https://flutterpro.design/details/md/shader-mask
 
-**Why:** a horizontal scrollable list might not always signal that it's scrollable. Especially when the visible content just fits the view and no item is cut in visibility. Fading the edge hints users that there's more.
+**Why:** a horizontal scrollable list might not always signal that it's scrollable. Especially when the visible content just fits the view and no item is cut in half. Fading the edge hints users that there's more and they can scroll it.
 
 **Detect:** a horizontal scrollable whose end edge doesn't fade.
 
@@ -44,7 +44,7 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Link:** https://flutterpro.design/details/md/selection-color
 
-**Why:** when a user selects text, in a text field or anywhere on the screen, the highlight is Material's tint color, not the app's.
+**Why:** `MaterialApp` applies default tinted colors for text selection in inputs. Match them to your brand colors instead.
 
 **Detect:** the app has text the user can select or type into, and the theme doesn't set `textSelectionTheme`.
 
@@ -56,33 +56,31 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Link:** https://flutterpro.design/details/md/smooth-image-loading
 
-**Why:** the screen shows up first and the pictures snap in one by one a moment later, pushing the layout around as they land. It makes the app look like it's still putting itself together while the user watches. Show a plain grey box until each picture is ready and fade it in, and the same screen feels calm.
+**Why:** images in Flutter load with no transition, no placeholder and no failure state. They just pop in. Make it calmer: Show a plain grey box until each picture is ready and fade it in. If fails show a subtle broken image icon, never a technical message.
 
-**Detect:** every image loaded over the network that appears with no transition. Flag when there's no placeholder, when it snaps in instead of fading, or when the failure case is a spinner, a broken-image glyph, or an error message the user can read. Assets are out of scope; they're bundled and fast enough to appear instantly. If the app renders network images through one shared widget, fixing that widget covers the app.
+**Detect:** images loaded over the network that appears with no transition, no placeholder while loading and no failure state. Assets are out of scope; they're bundled and fast enough to appear instantly.
 
-**Hunt:** grep `Image.network|NetworkImage|CachedNetworkImage|ExtendedImage|FadeInImage|image_fade`. `FadeInImage` and `image_fade` mean the app already knows the pattern, so the finding becomes the screens that skip it.
-
-**Gotchas:** the placeholder must be quiet, a flat neutral block or a shimmer; a spinner on every thumbnail is worse than the pop it replaced. Error states stay just as quiet: a small muted icon, never a message about the network. The fix needs a package unless the app already has an equivalent, so the finding says so.
+**Hunt:** grep `Image.network|NetworkImage|CachedNetworkImage|ExtendedImage|FadeInImage|image_fade`. Even if the app uses `FadeInImage` or `image_fade`, it must have subtle placeholder while loading and a subtle error state. Otherwise count as rule not adhered.
 
 ---
 
-## Preload icons so they don't pop in
+## Preload images and icons so they don't pop in
 
 **Link:** https://flutterpro.design/details/md/precache-icons
 
-**Why:** open the app and everything is there except the icons, which show up a moment later. Nobody thinks about why; they just feel the app is slow to wake up. Load the first screen's icons while the splash is still showing and it opens ready.
+**Why:** Flutter loads images and icons into memory when a widget first asks for them, and decoding takes time. So they are painted a few frames late. Precache them during splash view so they are ready when painted.
 
-**Detect:** the app draws icons from assets, `SvgPicture` most of all, and nothing preloads them at startup.
+**Detect:** the app shows icons and images from assets, mostly using `SvgPicture`,`Image.asset` or `AssetImage`, and nothing preloads them at startup.
 
-**Hunt:** grep `SvgPicture|Image.asset|AssetImage|Assets\.`; then grep `precacheImage|svg.cache`, and if that's already there, there's nothing to flag.
+**Hunt:** grep `SvgPicture|Image.asset|AssetImage|Assets\.`; then grep `precacheImage|svg.cache`, and if that's already there, and precaching all asset images and icons, only then, there's nothing to flag.
 
 ---
 
-## Show users your swipe actions exist
+## Teach users swiping an item right and left for actions
 
 **Link:** https://flutterpro.design/details/md/flutter-slidable-controller
 
-**Why:** delete and edit sit behind a swipe, with nothing on screen pointing at them. Users who don't think to swipe never find out those actions exist, so work you already shipped goes unused. Sliding the first row open by itself, once, the first time someone opens the list, teaches the gesture without a tutorial.
+**Why:** users who don't have muscle memory to look for actions behing items by swiping left and right, never find out those actions exist. Programatically open and close those actions for the first time user opens that page to teach them the gesture.
 
 **Detect:** a list whose rows have swipe actions, and nothing ever shows them.
 
