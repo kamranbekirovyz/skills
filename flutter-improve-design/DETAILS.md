@@ -8,23 +8,23 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Link:** https://flutterpro.design/details/md/in-app-changelog
 
-**Why:** after an update, users open the app and nothing tells them what's new. The bug you fixed and the feature they asked for go unnoticed. A short list on first open shows them, and the user who asked for that feature knows you listened.
+**Why:** after an update, users open the app and nothing tells them what's new. The bug you fixed and the feature they asked for go unnoticed. Show them as a list on first open after an update, and the user who reported that bug or asked for that feature knows you listened.
 
-**Detect:** the app never shows what changed after an update. Absence is the whole signal, so nothing in the code will match. A changelog or what's-new page sitting in settings or a profile does not count as handled, because the user has to go find it. Only a screen that comes up on its own, the first time they open a new version, counts as handled.
+**Detect:** the app never shows what changed after an update. Absence is the whole signal, so nothing in the code will match. A changelog or what's-new page sitting in settings or a profile does not count as handled, because the user has to go find it. Only a view that comes up on its own, the first time they open a new version, counts as handled.
 
-**Hunt:** grep `changelog|whats_new|whatsNew|release_notes|last_seen_version|version_history`. Nothing found means the app has none. If something is found, check it against Detect before clearing the rule.
+**Hunt:** grep `changelog|whats_new|whatsNew|release_notes|last_seen_version|version_history`. Nothing found means the app's missing it.
 
 ---
 
-## Don't let the system navigation bar cover the bottom of a scrollable list
+## Don't let the system navigation bar cover the bottom of scrollable lists
 
 **Link:** https://flutterpro.design/details/md/safe-area-replacement
 
-**Why:** the last item of scrollable lists can be obscured by the system navigation bar, and taps go to the bar instead of the item. Leave space as tall as that bar at the end of the list and the last item stays fully visible and tappable.
+**Why:** the last item of scrollable lists can be obscured by the system navigation bar, and taps go to the bar instead of the item. Leave space as tall as that bar at the end of the list so the last item has a breathing room against system bar.
 
 **Detect:** a vertical scrollable that runs to the bottom of the screen and doesn't end with space as tall as the system navigation bar. `SafeArea` around it doesn't fix it: it shrinks the scrolling area, so items get cut off as they pass the bottom instead of sliding under the bar. A fixed padding like 24 on every side isn't a fix either: the bar's height changes by device.
 
-**Hunt:** grep `ListView|SingleChildScrollView|CustomScrollView|GridView|NestedScrollView` for the scrollables, then `viewPaddingOf|viewPadding.bottom|BottomPadding` for the space and `SafeArea` for the wrong fix. A scrollable that ends without bottom padding read from the device is a match, and so is one wrapped in `SafeArea`. No scrollables at all means the rule doesn't apply.
+**Hunt:** grep `ListView|SingleChildScrollView|CustomScrollView|GridView|NestedScrollView` for the scrollables, then `viewPaddingOf|viewPadding.bottom|BottomPadding` for the space and `SafeArea` for the wrong fix. A scrollable that doesn't have a dynamic bottom padding based on device's `MediaQuery` is a match (meaning it needs the fix).
 
 ---
 
@@ -32,7 +32,7 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Link:** https://flutterpro.design/details/md/shader-mask
 
-**Why:** a horizontal row that ends in a hard edge looks like it has ended. Users don't swipe toward something they can't tell is there, so the rest of the row goes unseen. Fading the edge shows there's more, and the items you put there get looked at.
+**Why:** a horizontal scrollable list might not always signal that it's scrollable. Especially when the visible content just fits the view and no item is cut in visibility. Fading the edge hints users that there's more.
 
 **Detect:** a horizontal scrollable whose end edge doesn't fade.
 
