@@ -1,36 +1,36 @@
 # FlutterPro Design Detail Catalog
 
-The rules behind `flutter-improve-design`. Each rule: a title, the link to its full article on the line below (fetched only at plan time), **Why** (what the user lives with today and what the app gains by fixing it, in plain words, written to be shown to the developer as-is), then **Detect** (what to flag) and **Hunt** (how to search for it). 
+The rules behind `flutter-improve-design`. Each rule: a title, then the link to its full article and its impact tier on the line below (the article is fetched only at plan time), **Why** (what the user lives with today and what the app gains by fixing it, in plain words, written to be shown to the developer as-is), then **Detect** (what to flag) and **Hunt** (how to search for it). 
 
 ---
 
-## Show changelog after an update
+## Show what's new after an update
 
-https://flutterpro.design/details/md/in-app-changelog · Subtle · Effort: L
+https://flutterpro.design/details/md/in-app-changelog · Subtle
 
-**Why:** users update the app and never find out what changed. Showing a list of what changed the first time they open the new version makes the work visible, and a user who asked for something or reported an issue sees it was done.
+**Why:** after an update, users open the app and nothing tells them what's new. The bug you fixed and the feature they asked for go unnoticed. A short list on first open shows them, and the user who asked for that feature knows you listened.
 
-**Detect:** the app never shows what changed after an update. Flag as an opportunity, not a defect.
+**Detect:** the app never shows what changed after an update. Absence is the whole signal, so nothing in the code will match. A changelog or what's-new page sitting in settings or a profile does not count as handled, because the user has to go find it. Only a screen that comes up on its own, the first time they open a new version, counts as handled.
 
-**Hunt:** grep `changelog|whats_new|whatsNew|release_notes|last_seen_version`; nothing found means there's none.
+**Hunt:** grep `changelog|whats_new|whatsNew|release_notes|last_seen_version|version_history`. Nothing found means the app has none. If something is found, check it against Detect before clearing the rule.
 
 ---
 
-## Give the last item room to breathe
+## Don't let the system navigation bar cover the bottom of a scrollable list
 
-https://flutterpro.design/details/md/safe-area-replacement · Noticeable · Effort: S
+https://flutterpro.design/details/md/safe-area-replacement · Noticeable
 
-**Why:** the last item of a list ends up under the phone's bottom bar, half readable. `SafeArea` doesn't fix it, it cuts items off while they scroll. Lists should slide behind the bottom bar and end with space as tall as that bar.
+**Why:** the last item of scrollable lists can be obscured by the system navigation bar, and taps go to the bar instead of the item. Leave space as tall as that bar at the end of the list and the last item stays fully visible and tappable.
 
-**Detect:** a vertical list that runs to the bottom of the screen and doesn't end with space the size of the device's bottom bar. Almost no app does this.
+**Detect:** a vertical scrollable that runs to the bottom of the screen and doesn't end with space as tall as the system navigation bar. `SafeArea` around it doesn't fix it: it shrinks the scrolling area, so items get cut off as they pass the bottom instead of sliding under the bar. A fixed padding like 24 on every side isn't a fix either: the bar's height changes by device.
 
-**Hunt:** grep `ListView|SingleChildScrollView|CustomScrollView|GridView|NestedScrollView` for the list; grep `viewPaddingOf|viewPadding.bottom|BottomPadding` for the space. Nothing found means it's missing.
+**Hunt:** grep `ListView|SingleChildScrollView|CustomScrollView|GridView|NestedScrollView` for the scrollables, then `viewPaddingOf|viewPadding.bottom|BottomPadding` for the space and `SafeArea` for the wrong fix. A scrollable that ends without bottom padding read from the device is a match, and so is one wrapped in `SafeArea`. No scrollables at all means the rule doesn't apply.
 
 ---
 
 ## Make horizontal lists feel scrollable
 
-https://flutterpro.design/details/md/shader-mask · Noticeable · Effort: S
+https://flutterpro.design/details/md/shader-mask · Noticeable
 
 **Why:** a horizontal row that ends in a hard edge looks like it has ended. Users don't swipe toward something they can't tell is there, so the rest of the row goes unseen. Fading the edge shows there's more, and the items you put there get looked at.
 
@@ -42,7 +42,7 @@ https://flutterpro.design/details/md/shader-mask · Noticeable · Effort: S
 
 ## Match text selection to your app's colors
 
-https://flutterpro.design/details/md/selection-color · Subtle · Effort: S
+https://flutterpro.design/details/md/selection-color · Subtle
 
 **Why:** when a user selects text, in a text field or anywhere on the screen, the highlight is Material's tint color, not the app's.
 
@@ -54,7 +54,7 @@ https://flutterpro.design/details/md/selection-color · Subtle · Effort: S
 
 ## Load network images smoothly
 
-https://flutterpro.design/details/md/smooth-image-loading · Noticeable · Effort: S
+https://flutterpro.design/details/md/smooth-image-loading · Noticeable
 
 **Why:** the screen shows up first and the pictures snap in one by one a moment later, pushing the layout around as they land. It makes the app look like it's still putting itself together while the user watches. Show a plain grey box until each picture is ready and fade it in, and the same screen feels calm.
 
@@ -68,7 +68,7 @@ https://flutterpro.design/details/md/smooth-image-loading · Noticeable · Effor
 
 ## Preload icons so they don't pop in
 
-https://flutterpro.design/details/md/precache-icons · Subtle · Effort: S
+https://flutterpro.design/details/md/precache-icons · Subtle
 
 **Why:** open the app and everything is there except the icons, which show up a moment later. Nobody thinks about why; they just feel the app is slow to wake up. Load the first screen's icons while the splash is still showing and it opens ready.
 
@@ -80,7 +80,7 @@ https://flutterpro.design/details/md/precache-icons · Subtle · Effort: S
 
 ## Show users your swipe actions exist
 
-https://flutterpro.design/details/md/flutter-slidable-controller · Noticeable · Effort: M
+https://flutterpro.design/details/md/flutter-slidable-controller · Noticeable
 
 **Why:** delete and edit sit behind a swipe, with nothing on screen pointing at them. Users who don't think to swipe never find out those actions exist, so work you already shipped goes unused. Sliding the first row open by itself, once, the first time someone opens the list, teaches the gesture without a tutorial.
 
