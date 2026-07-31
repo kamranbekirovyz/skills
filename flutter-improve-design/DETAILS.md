@@ -409,3 +409,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a page where a text field can be focused while something somewhere in the page opens a modal (a picker, dropdown, bottom sheet, dialog, anything), and the opening handler doesn't call `FocusManager.instance.primaryFocus?.unfocus()` first. `FocusScope.of(context).unfocus()` counts as the wrong tool: it finds the nearest scope, not the actually focused field.
 
 **Hunt:** grep `showModalBottomSheet|showDialog|showDatePicker|showCupertinoModalPopup` in files that also have `TextField|TextFormField`; no overlap means the rule doesn't apply. Check each opener for `FocusManager` unfocus before it. Stop at the first without; that's a match.
+
+---
+
+## Show a friendly view when a widget breaks
+
+**Link:** https://flutterpro.design/details/md/friendly-error-view
+
+**Why:** when a widget fails to build, users see an empty grey box in release. Show a friendly "Something went wrong" in the app's own colors instead.
+
+**Detect:** the app doesn't set a custom `ErrorWidget.builder`. Not set means not adhered.
+
+**Hunt:** grep `ErrorWidget.builder`; nothing found means the app's missing it.
