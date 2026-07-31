@@ -277,3 +277,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a vertically scrollable widget with no scrollbar: neither wrapped in `Scrollbar` nor covered by an app-wide `scrollBehavior` override. One is enough to count the rule as not adhered.
 
 **Hunt:** grep `scrollBehavior|MaterialScrollBehavior` first; it only counts as handled if the override's `buildScrollbar` actually wraps in a `Scrollbar` (overrides exist for other reasons too, like drag devices or removing glow). Otherwise grep `ListView|SingleChildScrollView|CustomScrollView|GridView` and check for a wrapping `Scrollbar`. Stop at the first one without; that's a match.
+
+---
+
+## Make the whole GestureDetector area tappable
+
+**Link:** https://flutterpro.design/details/md/gesture-detector-hit-area
+
+**Why:** by default `GestureDetector` only takes taps on what its child paints, so the padding and the gaps between an icon and a text do nothing. The user taps the row and misses. The whole box should take the tap.
+
+**Detect:** a `GestureDetector` whose `behavior` isn't `opaque` or `translucent` and whose child has unpainted areas: padding, gaps in a `Row`/`Column`, or a `Container` without a color. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `GestureDetector` and check each for `behavior:`. One without `HitTestBehavior.opaque` or `.translucent`, whose child has padding or gaps, is a match.
