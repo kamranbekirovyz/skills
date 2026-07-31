@@ -157,3 +157,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a moment that deserves a haptic and doesn't have one: a tab bar item tapped, a form submitted successfully (login, register, payment), an error shown in a snackbar, a toggle flipped, a picker scrolled. The app using haptics somewhere doesn't count as handled; one key moment without a haptic is enough to count the rule as not adhered.
 
 **Hunt:** grep `HapticFeedback|haptic_feedback|Haptics\.|vibrate` to map what's covered. Then find a moment without one: grep `BottomNavigationBar|NavigationBar|TabBar` for tab taps, `SnackBar|showSnackBar` for success/error results, `Switch|Checkbox|onLongPress` for toggles and presses. Stop at the first one with no haptic call on its path; that's a match.
+
+---
+
+## Use tabular figures for changing numbers
+
+**Link:** https://flutterpro.design/details/md/tabular-figures
+
+**Why:** digits have different widths in most fonts, so a timer or counter jumps around as it changes. Tabular figures make every digit the same width: numbers stay still and line up.
+
+**Detect:** a number that changes (timer, counter, price) or lines up with others (table, totals) rendered without `FontFeature.tabularFigures()`. Numbers sitting in a sentence don't need it.
+
+**Hunt:** grep `tabularFigures` first; if used where it matters, nothing to flag. Otherwise grep `Timer|Stopwatch|Duration|countdown|price|total|amount` near `Text(`; a changing or aligned number without the feature is a match.
