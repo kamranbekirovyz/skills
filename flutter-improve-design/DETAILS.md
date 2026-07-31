@@ -445,3 +445,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a page with two or more single-line text fields where fields don't set `textInputAction`: the non-last ones `.next`, the last one `.done` (or `.send`/`.go`/`.search` when that's the form's action) with a submit in `onFieldSubmitted`. Multiline fields are exempt: their return key should insert a new line, which is the default. One form without this is enough to count the rule as not adhered.
 
 **Hunt:** find files with two or more `TextField|TextFormField`; none means the rule doesn't apply. In each, check for `textInputAction`. A multi-field form without it is a match.
+
+---
+
+## Make bottom sheets smooth and draggable
+
+**Link:** https://flutterpro.design/details/md/smooth-draggable-bottom-sheets
+
+**Why:** Material's `showModalBottomSheet` opens and closes with a mechanical, soulless motion. Bottom sheets should respond to drags smoothly.
+
+**Detect:** the app opens small non-scrolling bottom sheets with `showModalBottomSheet`. Full-screen scrollable sheets are out of scope.
+
+**Hunt:** grep Material's `showModalBottomSheet`; nothing means the rule doesn't apply. Found means the app's missing it.
