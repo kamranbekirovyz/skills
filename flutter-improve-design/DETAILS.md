@@ -253,3 +253,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a custom-built horizontal tab (chips, filters, categories) where selecting a tab doesn't scroll it into view. Material's `TabBar` handles it already, so only custom ones count. 
 
 **Hunt:** grep `TabBar` usages first; those are fine. Then find custom tab bars: a horizontal `ListView|SingleChildScrollView` whose items are tappable and track a selected index. If its selection handler has no `Scrollable.ensureVisible` (or equivalent scroll), that's a match.
+
+---
+
+## Open social media links in their apps
+
+**Link:** https://flutterpro.design/details/md/launch-social-media-apps
+
+**Why:** a social media link should open the app directly if it's installed, not the browser.
+
+**Detect:** a social media link (Instagram, X, WhatsApp and the like) launched without `mode: LaunchMode.externalApplication`. Custom schemes like `instagram://` count as wrong too: they fail when the app isn't installed.
+
+**Hunt:** grep `instagram|twitter|x\.com|facebook|whatsapp|wa\.me|tiktok|linkedin|youtube` near `launchUrl`; no social links means the rule doesn't apply. A launch without `externalApplication`, or via a custom scheme, is a match.
