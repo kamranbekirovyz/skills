@@ -217,3 +217,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a page whose only interactive element is one text field, and the field doesn't set `autofocus: true`. One such page is enough to count the rule as not adhered. Pages with other choices next to the field (like login with social buttons) are correct without it, so don't flag them.
 
 **Hunt:** the OTP page is the clearest case: grep `Pinput|pin_code|otp|Otp|OTP|smsCode|verification` and check `autofocus`. Then look up other single-field pages by name: grep files like `change_email|change_phone|edit_name|forgot_password` and check their field. Stop at the first one without `autofocus`; that's a match.
+
+---
+
+## Show the app version in settings
+
+**Link:** https://flutterpro.design/details/md/show-app-version
+
+**Why:** when a user reports a bug, the first question is which version they're on, and the app has no place to answer it.
+
+**Detect:** the app has nothing that displays the app version with its build number, and if the app uses Shorebird, the patch number too. Missing any of these counts as not adhered.
+
+**Hunt:** grep `PackageInfo|package_info_plus|buildNumber`; a version read and displayed on a page means it's handled. Nothing found means the app's missing it. If `shorebird` is in pubspec, the display must also include `readCurrentPatch` output; otherwise it's a match.
