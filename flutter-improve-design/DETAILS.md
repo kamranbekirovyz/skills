@@ -337,3 +337,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a `Scaffold` without an `appBar` whose scrollable body has no top fade (like a `ShaderMask` with a top-down gradient). One such page is enough to count the rule as not adhered.
 
 **Hunt:** grep `Scaffold(` and pick ones without `appBar:`; skip pages whose body doesn't scroll. On a scrolling one, check for `ShaderMask|ProgressiveFade` around the body. Stop at the first without; that's a match.
+
+---
+
+## Don't show the iOS date picker on Android
+
+**Link:** https://flutterpro.design/details/md/adaptive-date-picker
+
+**Why:** `CupertinoDatePicker` is iOS-native; Android users don't expect a scroll-wheel picker, and an iOS widget on Android reads as cheap. Show the Material picker on Android and the Cupertino one on iOS.
+
+**Detect:** a `CupertinoDatePicker` shown without a platform check: Android gets the iOS picker instead of something Android-appropriate (usually `showDatePicker`). One is enough to count the rule as not adhered.
+
+**Hunt:** grep `CupertinoDatePicker`; none means the rule doesn't apply. For each, look for a platform branch (`defaultTargetPlatform|Platform.isIOS`) that shows Android something else. No branch means the app's missing it.
