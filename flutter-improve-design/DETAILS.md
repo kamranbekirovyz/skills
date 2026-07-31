@@ -301,3 +301,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a date shown to the user without `DateFormat` from `intl`: raw `.toString()`, string interpolation of a `DateTime`, or hand-built patterns like `'$day/$month/$year'`. One is enough to count the rule as not adhered.
 
 **Hunt:** grep `DateFormat` first; a shared helper (like an extension on `DateTime`) used for display means it's handled. Otherwise grep `DateTime` near `Text(` and interpolations of `.day|.month|.year|.hour|.minute`; a date rendered raw is a match.
+
+---
+
+## Keep statusbar tap scrolling to top on iOS
+
+**Link:** https://flutterpro.design/details/md/statusbar-tap-scroll
+
+**Why:** tapping the statusbar scrolls the page to the top; it's native to iOS and users expect it. It works out of the box, but a custom `ScrollController` silently breaks it.
+
+**Detect:** a scrollable with its own `ScrollController` inside a `Scaffold` (or `CupertinoPageScaffold`) that isn't wrapped in a `PrimaryScrollController` providing that controller. Scrollables without a custom controller are fine; Flutter handles those.
+
+**Hunt:** grep `ScrollController(` for custom controllers; none means the rule doesn't apply. For each one attached to a vertical scrollable in a `Scaffold`, check for a `PrimaryScrollController` above it with the same controller. Stop at the first one without; that's a match.
