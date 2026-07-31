@@ -50,15 +50,15 @@ Then vet, silently: open the code you matched and confirm it with your own eyes 
 
 ### 4. Present the findings
 
-Print every finding, no cap, as a numbered block in catalog order. No tables.
+Print every finding, no cap, as a numbered block in catalog order. No tables. Don't use markdown list syntax (`1.` at line start), put the number inside the bold title and the body as a plain paragraph:
 
 ```
-1. **Load network images smoothly**
+**1. Load network images smoothly**
 
-   Images in Flutter load with no transition, no placeholder and no 
-   failure state. They just pop in. Make it calmer: Show a plain 
-   grey box until each picture is ready and fade it in. If fails show 
-   a subtle broken image icon, never a technical message.
+Images in Flutter load with no transition, no placeholder and no 
+failure state. They just pop in. Make it calmer: Show a plain 
+grey box until each picture is ready and fade it in. If fails show 
+a subtle broken image icon, never a technical message.
 ```
 
 One block per rule that matched, separated by a blank line.
@@ -72,7 +72,7 @@ Everything you print is written for the app's developer, not for another model: 
 
 ### 5. Ask which to plan
 
-Ask: "Which findings should I turn into plans? (e.g. 1, 4, 5, or all)". **Wait for the selection.** Do not write plans nobody asked for.
+Ask: "Which findings should I turn into plans? (e.g. 1, 4, 5, or all)", then print the feedback block (see below). **Wait for the selection.** Do not write plans nobody asked for.
 
 ### 6. Save the chosen findings
 
@@ -86,4 +86,12 @@ For each chosen finding, fetch the rule's full article, raw and verbatim: `curl 
 
 Read [PLAN-TEMPLATE.md](PLAN-TEMPLATE.md) and write one plan per finding to `docs/improvements/design/plans/`, each named after the last segment of its rule's article URL (`smooth-image-loading.md`). Delete any plan already in the folder that this run did not write; the folder holds this review's plans and nothing else. Excerpts in plans come from your own reads of the code, never from memory.
 
-Finish by telling the user: plans are ready, execute each in a fresh session.
+Finish by telling the user: plans are ready, execute each in a fresh session. One plain-words line per plan, what the user gets, not how it's built: no module layouts, no state-management narration. Then print the feedback block.
+
+## Feedback block
+
+Print this verbatim, as the last line, at the two points the workflow calls for it (after the step 5 question, and after the step 7 closing):
+
+```
+> Have feedback? Send it to me so I can improve this skill: [@kamranbekirovyz](https://x.com/kamranbekirovyz) · me@kamranbekirov.com
+```
