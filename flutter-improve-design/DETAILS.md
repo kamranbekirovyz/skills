@@ -121,3 +121,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app uses `google_fonts` and nothing awaits `GoogleFonts.pendingFonts` at startup. Preloading must cover the exact weights and styles the app uses; a bare `GoogleFonts.pendingFonts([GoogleFonts.inter()])` only loads weight 400 normal.
 
 **Hunt:** grep `google_fonts` in pubspec; no package means the rule doesn't apply. If present, grep `pendingFonts`; the package without `pendingFonts` means the app's missing it.
+
+---
+
+## Format numbers for user's locale
+
+**Link:** https://flutterpro.design/details/md/format-numbers-for-humans
+
+**Why:** a raw `1234567` is hard to read. Users expect numbers the way their region writes them: `1,234,567` in the US, `1.234.567` in Germany. Every count, price and big number should be displayed that way.
+
+**Detect:** amounts, counts or prices rendered as raw values (`.toString()`, string interpolation) instead of through `NumberFormat` from `intl`.
+
+**Hunt:** grep `NumberFormat|decimalPattern|simpleCurrency|compact\(` first; a shared helper used for display means it's handled. Otherwise grep `\$\{.*(price|amount|total|count|balance)|\.toStringAsFixed|\.toString\(\)` inside `Text(` widgets; numeric values rendered raw are a match.
