@@ -145,3 +145,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app has a `web/` folder and `web/index.html` has an empty `<body>` with nothing shown while Flutter boots: no splash, logo or progress indicator.
 
 **Hunt:** check `web/index.html` exists; if not, the rule doesn't apply. If it does, look at its `<body>`: only script tags and no visible markup (or `flutter_bootstrap.js` alone) means the app's missing it.
+
+---
+
+## Add haptic feedback to key moments
+
+**Link:** https://flutterpro.design/details/md/haptic-feedback
+
+**Why:** the app feels flat when taps and results happen in silence. A subtle vibration on a tab switch, a successful submit or an error makes the app feel responsive in the hand.
+
+**Detect:** a moment that deserves a haptic and doesn't have one: a tab bar item tapped, a form submitted successfully (login, register, payment), an error shown in a snackbar, a toggle flipped, a picker scrolled. The app using haptics somewhere doesn't count as handled; one key moment without a haptic is enough to count the rule as not adhered.
+
+**Hunt:** grep `HapticFeedback|haptic_feedback|Haptics\.|vibrate` to map what's covered. Then find a moment without one: grep `BottomNavigationBar|NavigationBar|TabBar` for tab taps, `SnackBar|showSnackBar` for success/error results, `Switch|Checkbox|onLongPress` for toggles and presses. Stop at the first one with no haptic call on its path; that's a match.
