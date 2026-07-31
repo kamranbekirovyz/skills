@@ -152,7 +152,7 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Link:** https://flutterpro.design/details/md/haptic-feedback
 
-**Why:** the app feels flat when taps and results happen in silence. A subtle vibration on a tab switch, a successful submit or an error makes the app feel responsive in the hand.
+**Why:** the app feels flat when taps and results happen in silence. A subtle haptic vibration on a tab switch, a successful submit or an error makes the app feel responsive in the hand.
 
 **Detect:** a moment that deserves a haptic and doesn't have one: a tab bar item tapped, a form submitted successfully (login, register, payment), an error shown in a snackbar, a toggle flipped, a picker scrolled. The app using haptics somewhere doesn't count as handled; one key moment without a haptic is enough to count the rule as not adhered.
 
