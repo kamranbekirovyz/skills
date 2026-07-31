@@ -181,3 +181,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app has a `web/` folder and `web/index.html` has no Open Graph tags. `og:image` must be an absolute URL, and `twitter:image` must be set too since X reads its own tags.
 
 **Hunt:** check `web/index.html` exists; if not, the rule doesn't apply. If it does, grep it for `og:title|og:image|twitter:card`; nothing found means the app's missing it.
+
+---
+
+## Dismiss the keyboard when the user scrolls
+
+**Link:** https://flutterpro.design/details/md/dismiss-keyboard-on-scroll
+
+**Why:** the user finishes typing and scrolls to see the rest, but the keyboard stays covering half the screen. Scrolling means they're done with the field, so close it for them.
+
+**Detect:** a scrollable with a text field inside that doesn't set `keyboardDismissBehavior` to `onDrag`. One such scrollable is enough to count the rule as not adhered. Chat screens are the exception: there the user scrolls while still typing, so leave those on `manual`.
+
+**Hunt:** grep `TextField|TextFormField|CupertinoTextField` and check if the enclosing `ListView|SingleChildScrollView|CustomScrollView|GridView` sets `keyboardDismissBehavior`. Stop at the first scrollable-with-field that doesn't; that's a match.
