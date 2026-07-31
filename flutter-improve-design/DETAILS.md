@@ -361,3 +361,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a horizontal list nested in a page scrollable that has horizontal padding, so items clip at the padding line instead of the screen edge. One is enough to count the rule as not adhered.
 
 **Hunt:** grep `Axis.horizontal|scrollDirection: Axis.horizontal`; none means the rule doesn't apply. For each, check the enclosing page scrollable for horizontal padding around it. Found one means it's a match.
+
+---
+
+## Strip Material tap effects from custom designs
+
+**Link:** https://flutterpro.design/details/md/strip-material-tap-effects
+
+**Why:** Material widgets ripple and glow on tap by default, and in an app with a custom design language those effects clash with it.
+
+**Detect:** the app has a custom design (its own buttons, colors, typography rather than the stock Material look) and the theme doesn't strip tap effects at both levels: the global ones (`splashFactory: NoSplash.splashFactory`, transparent `splashColor`, `highlightColor`, `hoverColor`, `focusColor`) and each used widget's component theme (`overlayColor` on button/navigation/tab/checkbox/radio/switch/slider themes). Global properties alone aren't full coverage: M3 widgets draw their press overlay from their own component theme. Only the component themes of widgets the app actually uses matter.
+
+**Hunt:** first judge if the design is custom (a design-system folder, custom button widgets, a brand palette); if the app is plain Material, the rule doesn't apply. Then in `ThemeData`, check the global properties (`NoSplash|splashColor|highlightColor|hoverColor|focusColor`) and grep `overlayColor` in the component themes of Material widgets the app uses (`IconButton|TextButton|ElevatedButton|NavigationBar|TabBar|Checkbox|Radio|Switch|Slider`). A used widget whose tap effect isn't stripped at either level is a match.
