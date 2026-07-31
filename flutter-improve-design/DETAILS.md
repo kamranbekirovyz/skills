@@ -193,3 +193,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a scrollable with a text field inside that doesn't set `keyboardDismissBehavior` to `onDrag`. One such scrollable is enough to count the rule as not adhered. Chat screens are the exception: there the user scrolls while still typing, so leave those on `manual`.
 
 **Hunt:** grep `TextField|TextFormField|CupertinoTextField` and check if the enclosing `ListView|SingleChildScrollView|CustomScrollView|GridView` sets `keyboardDismissBehavior`. Stop at the first scrollable-with-field that doesn't; that's a match.
+
+---
+
+## Scroll to top when the current bottom nav item is tapped again
+
+**Link:** https://flutterpro.design/details/md/bottom-nav-reselect
+
+**Why:** tapping the bottom nav bar item you're already on should scroll that page to the top. It's muscle memory for native app users, so they'll expect it from your apps too.
+
+**Detect:** the app has a bottom nav bar and tapping the already-selected tab does nothing. Look at where the tab tap is handled (the nav bar's `onTap`, or the state/cubit behind it): no reselect branch means not adhered.
+
+**Hunt:** grep `BottomNavigationBar|NavigationBar|CupertinoTabBar`; no bar means the rule doesn't apply. If there's one, check its tap handler for a same-index branch (like `index == currentIndex`) that scrolls to top. Missing means the app's missing it.
