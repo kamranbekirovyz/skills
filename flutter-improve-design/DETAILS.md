@@ -1,4 +1,4 @@
-# FlutterPro Design Detail Catalog
+# Flutter Design Detail Catalog
 
 The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** line with its full article (the article is fetched only at plan time), **Why** (what the user lives with today and what the app gains by fixing it, in plain words, written to be shown to the developer as-is), then **Detect** (what to flag) and **Hunt** (how to search for it). 
 
