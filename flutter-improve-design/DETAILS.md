@@ -265,3 +265,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a social media link (Instagram, X, WhatsApp and the like) launched without `mode: LaunchMode.externalApplication`. Custom schemes like `instagram://` count as wrong too: they fail when the app isn't installed.
 
 **Hunt:** grep `instagram|twitter|x\.com|facebook|whatsapp|wa\.me|tiktok|linkedin|youtube` near `launchUrl`; no social links means the rule doesn't apply. A launch without `externalApplication`, or via a custom scheme, is a match.
+
+---
+
+## Show scrollbars on vertical scrollables
+
+**Link:** https://flutterpro.design/details/md/scrollbars
+
+**Why:** a scrollbar shows the user where they are in the list and how much is left.
+
+**Detect:** a vertically scrollable widget with no scrollbar: neither wrapped in `Scrollbar` nor covered by an app-wide `scrollBehavior` override. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `scrollBehavior|MaterialScrollBehavior` first; it only counts as handled if the override's `buildScrollbar` actually wraps in a `Scrollbar` (overrides exist for other reasons too, like drag devices or removing glow). Otherwise grep `ListView|SingleChildScrollView|CustomScrollView|GridView` and check for a wrapping `Scrollbar`. Stop at the first one without; that's a match.
