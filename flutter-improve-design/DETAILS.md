@@ -289,3 +289,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a `GestureDetector` whose `behavior` isn't `opaque` or `translucent` and whose child has unpainted areas: padding, gaps in a `Row`/`Column`, or a `Container` without a color. One is enough to count the rule as not adhered.
 
 **Hunt:** grep `GestureDetector` and check each for `behavior:`. One without `HitTestBehavior.opaque` or `.translucent`, whose child has padding or gaps, is a match.
+
+---
+
+## Format dates for user's locale
+
+**Link:** https://flutterpro.design/details/md/format-date-times
+
+**Why:** `2016-06-24 14:44:00.000` is what `DateTime` prints, and no user should read a date like that. Show `24 July 2016, 14:44` instead, in the user's language.
+
+**Detect:** a date shown to the user without `DateFormat` from `intl`: raw `.toString()`, string interpolation of a `DateTime`, or hand-built patterns like `'$day/$month/$year'`. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `DateFormat` first; a shared helper (like an extension on `DateTime`) used for display means it's handled. Otherwise grep `DateTime` near `Text(` and interpolations of `.day|.month|.year|.hour|.minute`; a date rendered raw is a match.
