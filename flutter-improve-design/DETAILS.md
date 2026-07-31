@@ -313,3 +313,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a scrollable with its own `ScrollController` inside a `Scaffold` (or `CupertinoPageScaffold`) that isn't wrapped in a `PrimaryScrollController` providing that controller. Scrollables without a custom controller are fine; Flutter handles those.
 
 **Hunt:** grep `ScrollController(` for custom controllers; none means the rule doesn't apply. For each one attached to a vertical scrollable in a `Scaffold`, check for a `PrimaryScrollController` above it with the same controller. Stop at the first one without; that's a match.
+
+---
+
+## Limit text scaling so layouts don't break
+
+**Link:** https://flutterpro.design/details/md/text-scale-factor
+
+**Why:** some users increase their device's text size for accessibility, and at high scales layouts overflow and break. After the fix, run the app at the capped scale yourself to confirm nothing breaks.
+
+**Detect:** the app doesn't limit `textScaler` app-wide (in `MaterialApp.builder` or equivalent): no clamp and no fixed override like x1.0 or x1.1. Nothing limiting the scale means not adhered.
+
+**Hunt:** grep `textScaler|textScaleFactor`; a clamp or a fixed override applied app-wide means it's handled. Nothing found means the app's missing it.
