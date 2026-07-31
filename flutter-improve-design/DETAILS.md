@@ -349,3 +349,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a `CupertinoDatePicker` shown without a platform check: Android gets the iOS picker instead of something Android-appropriate (usually `showDatePicker`). One is enough to count the rule as not adhered.
 
 **Hunt:** grep `CupertinoDatePicker`; none means the rule doesn't apply. For each, look for a platform branch (`defaultTargetPlatform|Platform.isIOS`) that shows Android something else. No branch means the app's missing it.
+
+---
+
+## Let horizontal lists reach the screen edges
+
+**Link:** https://flutterpro.design/details/md/horizontal-list-padding
+
+**Why:** when the page's scrollable has horizontal padding, horizontal lists inside get clipped at the edges instead of sliding past them. The list should reach the edges and carry its own padding.
+
+**Detect:** a horizontal list nested in a page scrollable that has horizontal padding, so items clip at the padding line instead of the screen edge. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `Axis.horizontal|scrollDirection: Axis.horizontal`; none means the rule doesn't apply. For each, check the enclosing page scrollable for horizontal padding around it. Found one means it's a match.
