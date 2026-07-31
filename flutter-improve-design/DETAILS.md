@@ -229,3 +229,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app has nothing that displays the app version with its build number, and if the app uses Shorebird, the patch number too. Missing any of these counts as not adhered.
 
 **Hunt:** grep `PackageInfo|package_info_plus|buildNumber`; a version read and displayed on a page means it's handled. Nothing found means the app's missing it. If `shorebird` is in pubspec, the display must also include `readCurrentPatch` output; otherwise it's a match.
+
+---
+
+## Don't use mobile page transitions on web and desktop
+
+**Link:** https://flutterpro.design/details/md/web-page-transitions
+
+**Why:** web and desktop are click and open. Mobile slide and zoom transitions between pages look cheap there, so pages should switch with no transition.
+
+**Detect:** the app has a `web/`, `macos/`, `windows/` or `linux/` folder and its page transitions have no branch for those platforms: nothing disables transitions for web and desktop, in `pageTransitionsTheme` or at the router.
+
+**Hunt:** check a `web/`, `macos/`, `windows/` or `linux/` folder exists; if none, the rule doesn't apply. If one does, grep `pageTransitionsTheme|PageTransitionsBuilder|pageBuilder` and look for `kIsWeb` or desktop platform builders around it. No such branch means the app's missing it.
