@@ -169,3 +169,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a number that changes (timer, counter, price) or lines up with others (table, totals) rendered without `FontFeature.tabularFigures()`. Numbers sitting in a sentence don't need it.
 
 **Hunt:** grep `tabularFigures` first; if used where it matters, nothing to flag. Otherwise grep `Timer|Stopwatch|Duration|countdown|price|total|amount` near `Text(`; a changing or aligned number without the feature is a match.
+
+---
+
+## Give Flutter web links a preview card
+
+**Link:** https://flutterpro.design/details/md/flutter-web-og-image
+
+**Why:** shared in WhatsApp, Slack or X, the app's link shows as a bare URL. It should show a proper preview card with a title, description and image.
+
+**Detect:** the app has a `web/` folder and `web/index.html` has no Open Graph tags. `og:image` must be an absolute URL, and `twitter:image` must be set too since X reads its own tags.
+
+**Hunt:** check `web/index.html` exists; if not, the rule doesn't apply. If it does, grep it for `og:title|og:image|twitter:card`; nothing found means the app's missing it.
