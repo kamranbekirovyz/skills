@@ -433,3 +433,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a phone number shown or typed unformatted: a page displaying a raw phone value, or a phone text field with no formatting `inputFormatters`. Either one is enough to count the rule as not adhered.
 
 **Hunt:** grep `phone|phoneNumber|msisdn`; nothing means the rule doesn't apply. Where a phone value hits a `Text(` or a `TextField`, check for a mask or formatter (`MaskTextInputFormatter|inputFormatters|maskPhoneNumber|phone_numbers_parser`). Stop at the first raw one; that's a match.
+
+---
+
+## Give every text field the right keyboard action
+
+**Link:** https://flutterpro.design/details/md/text-input-action
+
+**Why:** users should be able to fill a form and submit it with the keyboard's action key alone: it moves them to the next field, and on the last one, submits. No tapping each field by hand.
+
+**Detect:** a page with two or more single-line text fields where fields don't set `textInputAction`: the non-last ones `.next`, the last one `.done` (or `.send`/`.go`/`.search` when that's the form's action) with a submit in `onFieldSubmitted`. Multiline fields are exempt: their return key should insert a new line, which is the default. One form without this is enough to count the rule as not adhered.
+
+**Hunt:** find files with two or more `TextField|TextFormField`; none means the rule doesn't apply. In each, check for `textInputAction`. A multi-field form without it is a match.
