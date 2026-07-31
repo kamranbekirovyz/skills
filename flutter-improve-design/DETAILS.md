@@ -325,3 +325,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app doesn't limit `textScaler` app-wide (in `MaterialApp.builder` or equivalent): no clamp and no fixed override like x1.0 or x1.1. Nothing limiting the scale means not adhered.
 
 **Hunt:** grep `textScaler|textScaleFactor`; a clamp or a fixed override applied app-wide means it's handled. Nothing found means the app's missing it.
+
+---
+
+## Fade scrolling content under the status bar
+
+**Link:** https://flutterpro.design/details/md/progressive-fade
+
+**Why:** on pages with no app bar, scrolling content runs behind the status bar and collides with the clock and battery. A progressive fade at the top dissolves it as it slides under.
+
+**Detect:** a `Scaffold` without an `appBar` whose scrollable body has no top fade (like a `ShaderMask` with a top-down gradient). One such page is enough to count the rule as not adhered.
+
+**Hunt:** grep `Scaffold(` and pick ones without `appBar:`; skip pages whose body doesn't scroll. On a scrolling one, check for `ShaderMask|ProgressiveFade` around the body. Stop at the first without; that's a match.
