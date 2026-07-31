@@ -373,3 +373,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app has a custom design (its own buttons, colors, typography rather than the stock Material look) and the theme doesn't strip tap effects at both levels: the global ones (`splashFactory: NoSplash.splashFactory`, transparent `splashColor`, `highlightColor`, `hoverColor`, `focusColor`) and each used widget's component theme (`overlayColor` on button/navigation/tab/checkbox/radio/switch/slider themes). Global properties alone aren't full coverage: M3 widgets draw their press overlay from their own component theme. Only the component themes of widgets the app actually uses matter.
 
 **Hunt:** first judge if the design is custom (a design-system folder, custom button widgets, a brand palette); if the app is plain Material, the rule doesn't apply. Then in `ThemeData`, check the global properties (`NoSplash|splashColor|highlightColor|hoverColor|focusColor`) and grep `overlayColor` in the component themes of Material widgets the app uses (`IconButton|TextButton|ElevatedButton|NavigationBar|TabBar|Checkbox|Radio|Switch|Slider`). A used widget whose tap effect isn't stripped at either level is a match.
+
+---
+
+## Reserve space for images before they load
+
+**Link:** https://flutterpro.design/details/md/reserve-image-space
+
+**Why:** an image widget has no size until its bytes arrive, so when it loads it snaps to its real height and pushes everything below it down. Its box should be sized before the image arrives, so the layout doesn't jump.
+
+**Detect:** a network image with no size decided before load: no `AspectRatio`, no width-and-height box, no parent that fixes its height. `fit:` doesn't count, it only paints inside an already-sized box; width alone doesn't count either, the height still snaps.
+
+**Hunt:** grep `Image.network|CachedNetworkImage|NetworkImage`; none means the rule doesn't apply. For each, check for an `AspectRatio`, an explicit width and height, or a height-bounding parent. Stop at the first without; that's a match.
