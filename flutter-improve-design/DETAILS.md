@@ -241,3 +241,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app has a `web/`, `macos/`, `windows/` or `linux/` folder and its page transitions have no branch for those platforms: nothing disables transitions for web and desktop, in `pageTransitionsTheme` or at the router.
 
 **Hunt:** check a `web/`, `macos/`, `windows/` or `linux/` folder exists; if none, the rule doesn't apply. If one does, grep `pageTransitionsTheme|PageTransitionsBuilder|pageBuilder` and look for `kIsWeb` or desktop platform builders around it. No such branch means the app's missing it.
+
+---
+
+## Scroll the tapped tab fully into view
+
+**Link:** https://flutterpro.design/details/md/tab-visibility
+
+**Why:** in a tab bar, when the user taps a tab that's only half visible, it should scroll fully into view.
+
+**Detect:** a custom-built horizontal tab (chips, filters, categories) where selecting a tab doesn't scroll it into view. Material's `TabBar` handles it already, so only custom ones count. 
+
+**Hunt:** grep `TabBar` usages first; those are fine. Then find custom tab bars: a horizontal `ListView|SingleChildScrollView` whose items are tappable and track a selected index. If its selection handler has no `Scrollable.ensureVisible` (or equivalent scroll), that's a match.
