@@ -205,3 +205,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app has a bottom nav bar and tapping the already-selected tab does nothing. Look at where the tab tap is handled (the nav bar's `onTap`, or the state/cubit behind it): no reselect branch means not adhered.
 
 **Hunt:** grep `BottomNavigationBar|NavigationBar|CupertinoTabBar`; no bar means the rule doesn't apply. If there's one, check its tap handler for a same-index branch (like `index == currentIndex`) that scrolls to top. Missing means the app's missing it.
+
+---
+
+## Autofocus the field when the page has only one
+
+**Link:** https://flutterpro.design/details/md/autofocus-single-field
+
+**Why:** a page that exists to collect one input (OTP, phone number, change email) makes the user tap the field first before they can type. Focus it on open: the keyboard is up, they type and move on.
+
+**Detect:** a page whose only interactive element is one text field, and the field doesn't set `autofocus: true`. One such page is enough to count the rule as not adhered. Pages with other choices next to the field (like login with social buttons) are correct without it, so don't flag them.
+
+**Hunt:** the OTP page is the clearest case: grep `Pinput|pin_code|otp|Otp|OTP|smsCode|verification` and check `autofocus`. Then look up other single-field pages by name: grep files like `change_email|change_phone|edit_name|forgot_password` and check their field. Stop at the first one without `autofocus`; that's a match.
