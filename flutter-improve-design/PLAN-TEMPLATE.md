@@ -52,8 +52,12 @@ file that does it right, if one exists>.
 
 ## Check it
 
-`dart analyze` exits clean. <Plus a grep for the old pattern returning
-nothing, when the fix has a greppable shape.>
+`dart analyze` exits clean. <Plus greps that prove the steps happened,
+each scoped to one file the steps changed, never `lib` or the whole app:
+the old pattern gone from that file, the new pattern present in it, e.g.
+`grep -c "SmoothImage" lib/features/home/widgets/filter_tabs.dart` → 1.
+A check must only be able to fail when a step wasn't done; if it could
+fail for any other reason, rewrite or drop it.>
 
 ## Don't touch
 
