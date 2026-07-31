@@ -370,9 +370,9 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Why:** Material widgets ripple and glow on tap by default, and in an app with a custom design language those effects clash with it.
 
-**Detect:** the app has a custom design (its own buttons, colors, typography rather than the stock Material look) and the theme doesn't strip tap effects at both levels: the global ones (`splashFactory: NoSplash.splashFactory`, transparent `splashColor`, `highlightColor`, `hoverColor`, `focusColor`) and each used widget's component theme (`overlayColor` on button/navigation/tab/checkbox/radio/switch/slider themes). Global properties alone aren't full coverage: M3 widgets draw their press overlay from their own component theme. Only the component themes of widgets the app actually uses matter.
+**Detect:** first decide what the app is. A Material design app (Material 3 or Expressive, mostly Material widgets) needs its ripples; the rule doesn't apply. An app with its own custom buttons that still uses some Material widgets here and there (a `TextButton`, a `Switch`) should strip their tap effects at both levels: global (`splashFactory: NoSplash.splashFactory`, transparent `splashColor`, `highlightColor`, `hoverColor`, `focusColor`) and each used widget's component theme (`overlayColor`), since M3 widgets draw their press overlay from their own component theme. Only widgets the app actually uses matter.
 
-**Hunt:** first judge if the design is custom (a design-system folder, custom button widgets, a brand palette); if the app is plain Material, the rule doesn't apply. Then in `ThemeData`, check the global properties (`NoSplash|splashColor|highlightColor|hoverColor|focusColor`) and grep `overlayColor` in the component themes of Material widgets the app uses (`IconButton|TextButton|ElevatedButton|NavigationBar|TabBar|Checkbox|Radio|Switch|Slider`). A used widget whose tap effect isn't stripped at either level is a match.
+**Hunt:** judge the design first: mostly Material widgets means the rule doesn't apply. Otherwise in `ThemeData` check the globals (`NoSplash|splashColor|highlightColor|hoverColor|focusColor`) and `overlayColor` in the component themes of the Material widgets in use. A used widget whose tap effect isn't stripped at either level is a match.
 
 ---
 
