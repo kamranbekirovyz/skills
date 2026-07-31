@@ -421,3 +421,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app doesn't set a custom `ErrorWidget.builder`. Not set means not adhered.
 
 **Hunt:** grep `ErrorWidget.builder`; nothing found means the app's missing it.
+
+---
+
+## Format phone numbers
+
+**Link:** https://flutterpro.design/details/md/format-phone-numbers
+
+**Why:** a phone number shown or typed as one long run of digits is hard to read and easy to mistype. It should be formatted everywhere the user sees one, including while they type to a text field.
+
+**Detect:** a phone number shown or typed unformatted: a page displaying a raw phone value, or a phone text field with no formatting `inputFormatters`. Either one is enough to count the rule as not adhered.
+
+**Hunt:** grep `phone|phoneNumber|msisdn`; nothing means the rule doesn't apply. Where a phone value hits a `Text(` or a `TextField`, check for a mask or formatter (`MaskTextInputFormatter|inputFormatters|maskPhoneNumber|phone_numbers_parser`). Stop at the first raw one; that's a match.
