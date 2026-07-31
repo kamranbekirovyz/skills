@@ -385,3 +385,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a network image with no size decided before load: no `AspectRatio`, no width-and-height box, no parent that fixes its height. `fit:` doesn't count, it only paints inside an already-sized box; width alone doesn't count either, the height still snaps.
 
 **Hunt:** grep `Image.network|CachedNetworkImage|NetworkImage`; none means the rule doesn't apply. For each, check for an `AspectRatio`, an explicit width and height, or a height-bounding parent. Stop at the first without; that's a match.
+
+---
+
+## Update the browser tab title per page
+
+**Link:** https://flutterpro.design/details/md/browser-tab-title
+
+**Why:** the tab title shows in the browser tab, history and bookmarks, and when it's the same on every page, a user with several tabs open can't tell them apart. Each page should say what it is.
+
+**Detect:** the app has a `web/` folder and nothing updates the tab title per page. Handled looks like either `Title` widgets on individual pages, or a wrapper in the app's `builder` that listens to the router (whatever the routing setup: Navigator 1.0/2.0, go_router, auto_route or other) and rebuilds a `Title` on navigation. A static app title alone, or `onGenerateTitle` (it only reruns on app rebuild, not navigation), doesn't count.
+
+**Hunt:** check the `web/` folder exists; if not, the rule doesn't apply. If it does, grep `Title(`; nothing beyond a static app title means the app's missing it.
