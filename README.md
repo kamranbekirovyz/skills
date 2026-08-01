@@ -16,9 +16,12 @@ npx skills add kamranbekirovyz/skills --skill flutter-improve-design
 
 Then run `/flutter-improve-design` in your Flutter project.
 
-### In progress
+### flutter-design-taste
 
-- `/flutter-design-taste`
+Gives your agent design taste: spacing, hierarchy, typography and color decisions that make generated Flutter UI look designed, not default. Coming soon.
+
+### Roadmap
+
 - `/flutter-improve-animations`
 - `/flutter-improve-theming`
 - `/flutter-improve-accessibility`
