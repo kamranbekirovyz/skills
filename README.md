@@ -4,7 +4,7 @@ Skills for building beautiful Flutter apps with AI coding agents.
 
 Built from [my experience](https://kamranbekirov.com) building 80+ Flutter apps and stuff I share on [FlutterPro.Design](https://flutterpro.design).
 
-## Skills
+## 🪄 Skills
 
 ### flutter-improve-design
 
@@ -16,7 +16,7 @@ npx skills add kamranbekirovyz/skills --skill flutter-improve-design
 
 Then run `/flutter-improve-design` in your Flutter project.
 
-### In progress, coming soon
+### In progress
 
 - `/flutter-design-taste`
 - `/flutter-improve-animations`
@@ -28,10 +28,10 @@ Then run `/flutter-improve-design` in your Flutter project.
 - `/flutter-add-home-widget`
 - `/flutter-analyze-app-size`
 
-## Feedback
+## 💬 Feedback
 
 Used a skill? Tell me how it went so I can improve it: [@kamranbekirovyz](https://x.com/kamranbekirovyz) · me@kamranbekirov.com
 
-## Links
+## 🔗 Links
 
 [flutterskills.md](https://flutterskills.md) · [flutterpro.design](https://flutterpro.design) · [@kamranbekirovyz](https://x.com/kamranbekirovyz)
