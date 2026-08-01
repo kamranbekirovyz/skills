@@ -80,7 +80,7 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 
 **Link:** https://flutterpro.design/details/md/flutter-slidable-controller
 
-**Why:** users who don't have muscle memory to look for actions behing items by swiping left and right, never find out those actions exist. Programatically open and close those actions for the first time user opens that page to teach them the gesture.
+**Why:** users who don't have muscle memory to look for actions behind items by swiping left and right, never find out those actions exist. Programmatically open and close those actions for the first time user opens that page to teach them the gesture.
 
 **Detect:** a list whose rows have swipe actions, and nothing ever shows them.
 
