@@ -18,7 +18,7 @@ Then run `/flutter-improve-design` in your Flutter project.
 
 ### flutter-design-taste
 
-Gives your agent design taste: spacing, hierarchy, typography and color decisions that make generated Flutter UI look designed, not default. Coming soon.
+Enable it while building Flutter apps with your agent: it makes the best UI/UX decisions from the start, so screens come out right the first time instead of getting fixed in review later. Coming soon.
 
 ### Roadmap
 
