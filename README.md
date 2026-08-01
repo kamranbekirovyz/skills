@@ -1,6 +1,6 @@
 # flutterskills.md
 
-Agent skills built for building beautiful Flutter apps.
+Skills for building beautiful Flutter apps with AI coding agents.
 
 Built from [my experience](https://kamranbekirov.com) building 80+ Flutter apps and stuff I share on [FlutterPro.Design](https://flutterpro.design).
 
