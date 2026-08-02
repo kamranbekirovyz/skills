@@ -457,3 +457,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app opens small non-scrolling bottom sheets with `showModalBottomSheet`. Full-screen scrollable sheets are out of scope.
 
 **Hunt:** grep Material's `showModalBottomSheet`; nothing means the rule doesn't apply. Found means the app's missing it.
+
+---
+
+## Keep the dial code from doubling in phone fields
+
+**Link:** https://flutterpro.design/details/md/autofill-dial-code
+
+**Why:** the phone number field has dial code (+XXX) as a static prefix, but paste and autofill insert the full number with the dial code again. The user ends up with the code twice and has to fix it by hand.
+
+**Detect:** a phone field that shows the dial code as a separate leading part (`prefixText`, a prefix widget, or a country code picker) with nothing in its `inputFormatters` stripping the dial code from pasted or autofilled input. No such field means the rule doesn't apply.
+
+**Hunt:** grep `TextInputType.phone|AutofillHints.telephoneNumber|prefixText` and find a phone field with a separated dial code; none means the rule doesn't apply. Check its `inputFormatters` for a formatter that strips the dial code; missing is a match.
