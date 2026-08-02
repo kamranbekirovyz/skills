@@ -469,3 +469,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a phone field that shows the dial code as a separate leading part (`prefixText`, a prefix widget, or a country code picker) with nothing in its `inputFormatters` stripping the dial code from pasted or autofilled input. No such field means the rule doesn't apply.
 
 **Hunt:** grep `TextInputType.phone|AutofillHints.telephoneNumber|prefixText` and find a phone field with a separated dial code; none means the rule doesn't apply. Check its `inputFormatters` for a formatter that strips the dial code; missing is a match.
+
+---
+
+## Give full-screen modals the modern sheet look
+
+**Link:** https://flutterpro.design/details/md/adaptive-sheet-route
+
+**Why:** full-screen modals that open from the bottom either use the iOS 13 sheet style, which looks dated now, or just slide up mechanically. Make them modern and smooth, closing with a pull down from the top.
+
+**Detect:** a full-screen modal opened from the bottom with `CupertinoSheetRoute` or with `showModalBottomSheet(isScrollControlled: true)`. One is enough to count the rule as not adhered. Small non-scrolling sheets belong to the bottom sheet rule, not this one. No full-screen bottom modals means the rule doesn't apply.
+
+**Hunt:** grep `CupertinoSheetRoute|isScrollControlled`; a full-screen modal behind either is a match. Nothing found means the rule doesn't apply.
