@@ -493,3 +493,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** an amount field with a hard maximum (a balance, a limit, an order total) that accepts values past it and complains afterwards, anywhere: a field error, a snackbar, a dialog, or a rejected submit. Blocking the edit at input counts as handled. No amount field with a hard maximum means the rule doesn't apply.
 
 **Hunt:** grep `numberWithOptions|TextInputType.number` for amount fields, then look for a max nearby: any path comparing the value to a balance or limit and reacting with an error (`insufficient|exceeds|too (much|high)|maxAmount|balance`), whether in the field, a snackbar, or a dialog. A field that errors after typing instead of blocking the edit is a match. No capped amount field means the rule doesn't apply.
+
+---
+
+## Report real screen names to analytics
+
+**Link:** https://flutterpro.design/details/md/analytics-screen-names
+
+**Why:** analytics sees a Flutter app as one native view, so every page gets reported as `FlutterViewController`. You can't tell which screens users spend time.
+
+**Detect:** the app reports screens through an analytics navigator observer, and a piece is missing: native automatic screen reporting still on (meaning that nothing disables it on iOS and Android), or routes pushed without names (plain `Navigator.push` with no `RouteSettings` name; named routes and go_router routes carry names already). One missing piece is enough to count the rule as not adhered. No analytics observer means the app doesn't track screens at all, so the rule doesn't apply.
+
+**Hunt:** grep `AnalyticsObserver|navigatorObservers|observers:` for an analytics observer; none means the rule doesn't apply. Then two checks: look in `ios/` and `android/` for whatever disables that SDK's native automatic screen reporting (for Firebase it's `FirebaseAutomaticScreenReportingEnabled` and `automatic_screen_reporting`; other SDKs have their own switch, and some report by session capture instead); grep `Navigator.of|MaterialPageRoute` for pushes without a `RouteSettings` name. The first missing one is a match.
