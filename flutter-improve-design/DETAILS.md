@@ -481,3 +481,15 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** a full-screen modal opened from the bottom with `CupertinoSheetRoute` or with `showModalBottomSheet(isScrollControlled: true)`. One is enough to count the rule as not adhered. Small non-scrolling sheets belong to the bottom sheet rule, not this one. No full-screen bottom modals means the rule doesn't apply.
 
 **Hunt:** grep `CupertinoSheetRoute|isScrollControlled`; a full-screen modal behind either is a match. Nothing found means the rule doesn't apply.
+
+---
+
+## Don't let amount fields go over the limit
+
+**Link:** https://flutterpro.design/details/md/max-amount-formatter
+
+**Why:** when a text field has an amount limit, letting the user type past it and then showing an error is needless friction. A field that simply never accepts more than the limit is better.
+
+**Detect:** an amount field with a hard maximum (a balance, a limit, an order total) that accepts values past it and complains afterwards, anywhere: a field error, a snackbar, a dialog, or a rejected submit. Blocking the edit at input counts as handled. No amount field with a hard maximum means the rule doesn't apply.
+
+**Hunt:** grep `numberWithOptions|TextInputType.number` for amount fields, then look for a max nearby: any path comparing the value to a balance or limit and reacting with an error (`insufficient|exceeds|too (much|high)|maxAmount|balance`), whether in the field, a snackbar, or a dialog. A field that errors after typing instead of blocking the edit is a match. No capped amount field means the rule doesn't apply.
