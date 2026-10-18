@@ -18,7 +18,13 @@ Then run `/flutter-improve-design` in your Flutter project.
 
 ### flutter-design-taste
 
-Enable it while building Flutter apps with your agent: it makes the best UI/UX decisions from the start, so screens come out right the first time instead of getting fixed in review later. Coming soon.
+Enable it while building Flutter apps with your agent: it makes the best UI/UX decisions from the start, so screens come out right the first time instead of getting fixed in review later. It follows the same catalog `flutter-improve-design` reviews against.
+
+```sh
+npx skills add kamranbekirovyz/skills --skill flutter-design-taste
+```
+
+Then build as usual: your agent applies the catalog to every screen, form and sheet it writes.
 
 ### Roadmap
 
