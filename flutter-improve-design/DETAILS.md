@@ -505,3 +505,183 @@ The rules behind `flutter-improve-design`. Each rule: a title, then a **Link** l
 **Detect:** the app reports screens through an analytics navigator observer, and a piece is missing: native automatic screen reporting still on (meaning that nothing disables it on iOS and Android), or routes pushed without names (plain `Navigator.push` with no `RouteSettings` name; named routes and go_router routes carry names already). One missing piece is enough to count the rule as not adhered. No analytics observer means the app doesn't track screens at all, so the rule doesn't apply.
 
 **Hunt:** grep `AnalyticsObserver|navigatorObservers|observers:` for an analytics observer; none means the rule doesn't apply. Then two checks: look in `ios/` and `android/` for whatever disables that SDK's native automatic screen reporting (for Firebase it's `FirebaseAutomaticScreenReportingEnabled` and `automatic_screen_reporting`; other SDKs have their own switch, and some report by session capture instead); grep `Navigator.of|MaterialPageRoute` for pushes without a `RouteSettings` name. The first missing one is a match.
+
+---
+
+## Animate exits faster than entrances
+
+**Link:** https://flutterpro.design/details/md/enter-slow-exit-fast
+
+**Why:** an element that's leaving is already dismissed in the user's head, so every extra frame of its exit is waiting. Entrances can take their time so they get noticed; exits should be faster, and never bounce.
+
+**Detect:** a custom enter and exit animation that runs both directions on the same timing: an `AnimationController` played forward and reversed with no `reverseDuration`, a `CurvedAnimation` with no `reverseCurve`, a custom route with `transitionDuration` and no `reverseTransitionDuration`, or the same spring (or a bouncy one) used for both the entrance and the exit. Flutter's built-in page and dialog transitions and one-way animations (a loading pulse, a progress fill) are out of scope. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `AnimationController(|PageRouteBuilder|transitionDuration|SpringDescription|SpringSimulation|MaterialSpringMotion`; none means the rule doesn't apply. For a controller, check it's also `.reverse()`d and whether it sets `reverseDuration` and its curve a `reverseCurve`; for a route, `reverseTransitionDuration`; for springs, whether the exit uses a faster one without bounce. Stop at the first that shares one timing; that's a match.
+
+---
+
+## Let password managers fill the login form
+
+**Link:** https://flutterpro.design/details/md/password-autofill
+
+**Why:** password managers can fill a login screen with one tap, but only when the app tells the system what each field is. Without it, users who saved their password still copy it from the manager by hand, and sign up gets no generated strong password.
+
+**Detect:** a login, sign up or password reset form where the fields have no `autofillHints`, or have them but aren't wrapped together in one `AutofillGroup`. Also counts: a sign up or reset field using `AutofillHints.password` instead of `AutofillHints.newPassword`, or `AutofillHints.email` on a field without `TextInputType.emailAddress`. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `obscureText` for password fields; none means the rule doesn't apply. In each of those files, check the fields for `autofillHints` and the form for an `AutofillGroup` around them. Stop at the first form missing either; that's a match.
+
+---
+
+## Offer to save the password after a successful sign in
+
+**Link:** https://flutterpro.design/details/md/trigger-password-save
+
+**Why:** after the user types their login, the password manager should offer to save it, so next time it's one tap. Without a save at the right moment it's either never offered, or offered after a failed sign in and saves the wrong password.
+
+**Detect:** a login form where nothing calls `TextInput.finishAutofillContext()` after the sign in succeeds, or whose `AutofillGroup` keeps the default `onDisposeAction` (`commit`), which saves whenever the screen is left, even after a failed sign in. A successful password reset with no `finishAutofillContext()` counts too. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `obscureText` for the login form; none means the rule doesn't apply. Then grep `finishAutofillContext` on the sign in and reset success paths, and `onDisposeAction` on the group. The first one missing is a match.
+
+---
+
+## Let urgent notifications through Focus on iOS
+
+**Link:** https://flutterpro.design/details/md/time-sensitive-notifications
+
+**Why:** a courier at the door or a login code that expires in minutes lands silently in a Focus mode or a scheduled summary, and the user sees it too late. Marked as time sensitive, iOS delivers it right away and keeps it on screen until it's opened.
+
+**Detect:** the app shows notifications on iOS for events that expire in minutes (a courier or ride arriving, a login code, a reservation about to be released, a time that's about to pass) and either doesn't mark them time sensitive (`InterruptionLevel.timeSensitive` for local ones) or marks them without the Time Sensitive Notifications capability (`com.apple.developer.usernotifications.time-sensitive` in the `ios/Runner` entitlements), which makes iOS ignore the level. Push payloads are built on the server, outside this repo, so judge push by the capability alone. "Order shipped", promos and likes aren't urgent; nothing to flag for apps that only send those.
+
+**Hunt:** check `ios/` exists and pubspec has `flutter_local_notifications|firebase_messaging|onesignal`; if not, the rule doesn't apply. Read what the notifications say to find an urgent one; none means the rule doesn't apply. Then grep `interruptionLevel|timeSensitive` in `lib/` and `time-sensitive` in `ios/`. An urgent notification without the level, or the level without the capability, is a match.
+
+---
+
+## Cache network images on disk
+
+**Link:** https://flutterpro.design/details/md/cache-network-images
+
+**Why:** Flutter keeps network images in memory only. Every time the app restarts, every image downloads again: screens fill in slower and users pay for the same data twice. Cache them on disk.
+
+**Detect:** network images loaded with no disk cache: `Image.network`, `NetworkImage`, `ExtendedNetworkImageProvider` without `cache: true`, or `ExtendedImage.network` with `cache: false`. `CachedNetworkImage` and `ExtendedImage.network` with its default cache count as handled. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `Image.network|NetworkImage(|ExtendedNetworkImageProvider|ExtendedImage.network|CachedNetworkImage`; none means the rule doesn't apply. Stop at the first image without a disk cache; that's a match.
+
+---
+
+## Carry the typed number from login to reset password and register
+
+**Link:** https://flutterpro.design/details/md/prefill-from-login
+
+**Why:** users usually open "Forgot password" right after a "Wrong credentials" error, to reset the account they just typed, and make them type it again. A user who taps "Register" from login just realized they don't have an account. Both pages should open with the number already filled in.
+
+**Detect:** a login page with a phone number (or email) field that links to forgot password or registration, where the navigation doesn't pass the typed value along or the next page's field doesn't start with it. One of the two is enough to count the rule as not adhered.
+
+**Hunt:** grep `forgot|Forgot|reset_password|ResetPassword|register|Register|sign_up|SignUp` in the login page; no login page with those links means the rule doesn't apply. Check the push to each for an argument carrying the login field's text, and the target page's controller for an initial `text:` from it. The first missing is a match.
+
+---
+
+## Force an update or freeze the app from the server
+
+**Link:** https://flutterpro.design/details/md/forced-update
+
+**Why:** when a released version has a critical bug, or the backend goes down, there's no way to reach users already on that version. A config on the server with minimum versions and a maintenance flag lets you force an update, show a soft one, or freeze the app with a message, without shipping a new release.
+
+**Detect:** nothing checks a server config for a minimum version or a maintenance mode. If one exists, it still counts as not adhered when the check blocks the app from opening (awaited before the first screen shows), when store URLs are hardcoded in the app, or when one minimum version or flag covers both Android and iOS.
+
+**Hunt:** grep `versionarte|upgrader|minVersion|min_version|minimumVersion|forceUpdate|force_update|forcedUpdate|maintenance|Maintenance`; nothing found means the app's missing it. If found, check where it's awaited, where the store URLs come from, and whether versions are set per platform.
+
+---
+
+## Keep Terms links translatable inside one sentence
+
+**Link:** https://flutterpro.design/details/md/linked-text
+
+**Why:** sign up screens link to Terms of Use and Privacy Policy from inside a sentence, and each language puts those links in a different spot. Glued together from separate pieces in code, the links can't move, and the sentence reads broken in any language with a different word order.
+
+**Detect:** a sentence with tappable links built from separately translated pieces (a `Row`/`Wrap` of `Text`s and buttons, or `TextSpan`s each with their own translation key), instead of one translated string with the links marked inside. One is enough to count the rule as not adhered. An app without localization is out of scope.
+
+**Hunt:** grep `AppLocalizations|easy_localization|\.tr\(|intl_utils|slang` for localization; none means the rule doesn't apply. Then grep `TapGestureRecognizer|Terms|terms|Privacy|privacy` near `TextSpan|Text.rich|RichText|Wrap|Row`. A linked sentence assembled from several translation keys is a match.
+
+---
+
+## Keep the screen awake only where users watch it
+
+**Link:** https://flutterpro.design/details/md/keep-screen-awake
+
+**Why:** on a video player, a call, navigation or a reading page, users look at the screen for minutes without touching it, and it turns off in the middle. Keep it awake there, and only there: a phone that never locks drains the battery and stays open for anyone to see.
+
+**Detect:** a page users watch without touching (video, live call, navigation, compass, reading, workout or cooking timer) with no wakelock, or a wakelock that's turned on app-wide (in `main` or the root widget) or never turned off when the page is left, like a tab in an `IndexedStack` that never disposes. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `wakelock|WakelockPlus` first; if found, check it's enabled per page and disabled when that page is left, not in `main.dart`. If not found, grep `video_player|VideoPlayer|chewie|better_player|agora|livekit|webrtc|jitsi|compass|reader` for a watch-without-touching page. One without a wakelock is a match; no such page means the rule doesn't apply.
+
+---
+
+## Pick photos without a permission prompt
+
+**Link:** https://flutterpro.design/details/md/native-photo-picker
+
+**Why:** asking for the whole photo library just to pick one photo puts users off, and a deny sends them to Settings. The system photo picker gives the app only the photo they pick, with no permission dialog at all.
+
+**Detect:** a photo pick that asks for gallery permission first (`Permission.photos`, `Permission.storage`, `PhotoManager.requestPermissionExtend`), or `image_picker` used without `useAndroidPhotoPicker = true` on Android. Apps whose feature is the whole library (gallery, backup) are out of scope.
+
+**Hunt:** grep `image_picker|ImagePicker|photo_manager|wechat_assets_picker|Permission.photos|Permission.storage`; none means the rule doesn't apply. A permission request on the pick path, or `ImagePicker` with no `useAndroidPhotoPicker` set at startup, is a match.
+
+---
+
+## Remove photo and video permissions the app doesn't need
+
+**Link:** https://raw.githubusercontent.com/kamranbekirovyz/skills/main/flutter-improve-design/articles/remove-media-permissions.md
+
+**Why:** some photo packages quietly add access to the whole photo and video library to the Android app. Google Play only allows that for apps whose core feature is the library, and holds the rest in review. An app that only picks a photo now and then should strip them and use the system photo picker.
+
+**Detect:** the release build declares `READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO`, in the app's own `AndroidManifest.xml` or merged in from a package, with no `tools:node="remove"` for them, and the app's core feature isn't browsing the whole library. Gallery, backup and photo editing apps are out of scope.
+
+**Hunt:** check `android/` exists; if not, the rule doesn't apply. Grep `READ_MEDIA_IMAGES|READ_MEDIA_VIDEO` in `android/app/src/main/AndroidManifest.xml`: declared without `tools:node="remove"` is a match, and both removed means it's handled. If neither, grep the same in each Android plugin's `android/src/main/AndroidManifest.xml` in the pub cache, at the versions in `pubspec.lock`. A plugin that declares one is a match.
+
+---
+
+## Offer the copied code on fields people paste into
+
+**Link:** https://flutterpro.design/details/md/clipboard-suggestion
+
+**Why:** promo codes, referral codes, card and tracking numbers are almost always copied from somewhere else, and on iOS pasting means a long press, a wait and a tap. Show what's on the clipboard under the field when it's tapped, and one tap fills it in.
+
+**Detect:** a text field for a value users usually paste (promo, coupon, voucher, referral or gift code, tracking number, IBAN, card number, wallet address) with nothing that reads the clipboard and offers it. One is enough to count the rule as not adhered. OTP fields are out of scope; the system fills those from the SMS.
+
+**Hunt:** grep `promo|coupon|voucher|referral|giftCard|gift_card|tracking|iban|IBAN|cardNumber|card_number|wallet` near `TextField|TextFormField`; none means the rule doesn't apply. Check that page for `Clipboard.getData`; missing is a match.
+
+---
+
+## Turn on "Save" only after something changes
+
+**Link:** https://flutterpro.design/details/md/disable-unchanged-save
+
+**Why:** on an edit form, a "Save" that's always on doesn't tell the user whether there's anything to save, and tapping it sends a request that changes nothing. Off until an edit, it lights up when the change counts, and goes back off if the edit is undone.
+
+**Detect:** an edit form prefilled from saved data (profile, address, settings) whose save button is enabled before anything changes, or is disabled by hiding it or fading it with opacity instead of a solid grey, or tracks "was touched" instead of comparing the current values with the initial ones. Login and sign up are out of scope: their button stays enabled. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `TextEditingController(text:|initialValue:` for prefilled forms; none means the rule doesn't apply. Check the save button's `onPressed` for a has-changes condition, and look for `Opacity|AnimatedOpacity|Visibility` around it. The first always-on or faded one is a match.
+
+---
+
+## Ask "Discard changes?" before going back
+
+**Link:** https://flutterpro.design/details/md/discard-changes-prompt
+
+**Why:** one accidental back on an edit form and everything the user typed is gone. Ask before throwing it away, but only when something actually changed.
+
+**Detect:** an edit or compose page (a prefilled edit form, a new post, review or message) that lets the user go back with unsaved changes and no prompt: no `PopScope` (or old `WillPopScope`) guarding it. Also counts: a prompt that shows even when nothing changed, buttons labeled Yes/No/Cancel instead of "Discard changes" and "Keep editing", or a custom back button calling `Navigator.pop` instead of `maybePop`, which skips the guard. Pages that save drafts on their own are fine without a prompt. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `TextEditingController(text:|initialValue:` for edit forms and `maxLines: null|minLines:` for compose fields; none means the rule doesn't apply. Check those pages for `PopScope|WillPopScope`. Stop at the first without; that's a match.
+
+---
+
+## Don't ask for notifications at app open
+
+**Link:** https://flutterpro.design/details/md/notification-permission-priming
+
+**Why:** asked at app open, users have no reason to say yes yet, and the system dialog is a one-shot: after "Don't Allow" on iOS it never shows again. Ask when the benefit is obvious, behind your own screen explaining it, so a "Skip" costs nothing.
+
+**Detect:** the system notification dialog shows with no context: requested from `main`, the splash, the first screen's `initState` or app startup, or requested anywhere without the app's own page or modal explaining the benefit first. `flutter_local_notifications` initialized on iOS with `requestAlertPermission` left at its default `true` counts too, since it prompts at init. One is enough to count the rule as not adhered.
+
+**Hunt:** grep `requestPermission|Permission.notification|requestNotificationsPermission|DarwinInitializationSettings|OneSignal.Notifications`; none means the rule doesn't apply. Trace each request to its caller. One called at startup, or with no explaining screen before it, is a match.
